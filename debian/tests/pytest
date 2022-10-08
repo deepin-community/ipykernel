@@ -1,0 +1,5 @@
+#!/bin/sh
+
+export HOME=$AUTOPKGTEST_TMP
+timeout 300 py.test-3 ipykernel
+
