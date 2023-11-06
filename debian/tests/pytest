@@ -1,5 +1,11 @@
 #!/bin/sh
 
-export HOME=$AUTOPKGTEST_TMP
-timeout 300 py.test-3 ipykernel
+set -e
 
+PYS=$(py3versions -s)
+export HOME=$AUTOPKGTEST_TMP
+
+for py in $PYS; do
+    echo "Testing with $py:"
+    timeout 300 $py -m pytest ipykernel
+done

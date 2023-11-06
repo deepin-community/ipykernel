@@ -1,2 +1,10 @@
 Tests: pytest
-Depends: @, python3-pytest, python3-nose, python3-mock, python3-flaky, python3-ipyparallel
+Depends: python3-all,
+         python3-flaky,
+         python3-ipyparallel,
+         python3-mock,
+         python3-pytest,
+         python3-pytest-asyncio,
+         python3-pytest-timeout,
+         python3-trio,
+         @

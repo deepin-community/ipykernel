@@ -6,15 +6,13 @@ Subject: test_simple_print may produce stderr content when executed in sbuild
  ipykernel/tests/test_kernel.py | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/ipykernel/tests/test_kernel.py b/ipykernel/tests/test_kernel.py
-index 0c24db4..2d6f533 100644
---- a/ipykernel/tests/test_kernel.py
-+++ b/ipykernel/tests/test_kernel.py
-@@ -46,7 +46,6 @@ def test_simple_print():
+--- ipykernel.orig/ipykernel/tests/test_kernel.py
++++ ipykernel/ipykernel/tests/test_kernel.py
+@@ -54,7 +54,6 @@
          msg_id, content = execute(kc=kc, code="print('hi')")
          stdout, stderr = assemble_output(kc.get_iopub_msg)
-         assert stdout == 'hi\n'
--        assert stderr == ''
+         assert stdout == "hi\n"
+-        assert stderr == ""
          _check_master(kc, expected=True)
  
  
