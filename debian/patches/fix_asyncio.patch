@@ -1,0 +1,26 @@
+Description: get rid of "There is no current event loop in..." error
+Author: Julien Puydt
+Forwarded: https://github.com/ipython/ipykernel/issues/929
+
+--- ipykernel.orig/ipykernel/inprocess/client.py
++++ ipykernel/ipykernel/inprocess/client.py
+@@ -188,8 +188,7 @@
+             dispatch_shell = run_sync(kernel.dispatch_shell)
+             dispatch_shell(msg_parts)
+         else:
+-            loop = asyncio.get_event_loop()
+-            loop.run_until_complete(kernel.dispatch_shell(msg_parts))
++            asyncio.run(kernel.dispatch_shell(msg_parts))
+         idents, reply_msg = self.session.recv(stream, copy=False)
+         self.shell_channel.call_handlers_later(reply_msg)
+ 
+--- ipykernel.orig/pyproject.toml
++++ ipykernel/pyproject.toml
+@@ -106,6 +106,7 @@
+ warn_unused_ignores = true
+ 
+ [tool.pytest.ini_options]
++asyncio_mode = "strict"
+ addopts = "-raXs --durations 10 --color=yes --doctest-modules --ignore=ipykernel/pylab/backend_inline.py --ignore=ipykernel/pylab/config.py --ignore=ipykernel/gui/gtk3embed.py --ignore=ipykernel/gui/gtkembed.py --ignore=ipykernel/datapub.py --ignore=ipykernel/log.py --ignore=ipykernel/pickleutil.py --ignore=ipykernel/serialize.py --ignore=ipykernel/_eventloop_macos.py"
+ testpaths = [
+     "ipykernel/tests",

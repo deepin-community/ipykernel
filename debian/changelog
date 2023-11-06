@@ -1,3 +1,147 @@
+ipykernel (6.24.0-3) unstable; urgency=medium
+
+  * Team upload.
+  * *Really* skip test which fails on the buildds but works in a local sbuild
+
+ -- Julian Gilbey <jdg@debian.org>  Wed, 19 Jul 2023 20:16:28 +0100
+
+ipykernel (6.24.0-2) unstable; urgency=medium
+
+  * Team upload.
+  * Skip test which fails on the buildds but works in a local sbuild
+
+ -- Julian Gilbey <jdg@debian.org>  Mon, 17 Jul 2023 21:37:04 +0100
+
+ipykernel (6.24.0-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream version.
+
+ -- Julian Gilbey <jdg@debian.org>  Thu, 13 Jul 2023 15:51:09 +0100
+
+ipykernel (6.23.3-3) unstable; urgency=medium
+
+  * Team upload.
+  * Put the Breaks clause in the correct place in d/control!
+
+ -- Julian Gilbey <jdg@debian.org>  Thu, 13 Jul 2023 09:26:49 +0100
+
+ipykernel (6.23.3-2) unstable; urgency=medium
+
+  * Team upload.
+  * Add Breaks on older nbclient, as the autopkgtests fail otherwise
+
+ -- Julian Gilbey <jdg@debian.org>  Wed, 12 Jul 2023 20:07:59 +0100
+
+ipykernel (6.23.3-1) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Julien Puydt ]
+  * New upstream release 6.18.0 (unreleased).
+
+  [ Julian Gilbey ]
+  * New upstream release 6.23.3
+
+ -- Julian Gilbey <jdg@debian.org>  Sun, 02 Jul 2023 13:06:28 +0100
+
+ipykernel (6.17.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Julien Puydt <jpuydt@debian.org>  Mon, 07 Nov 2022 17:15:43 +0100
+
+ipykernel (6.16.2-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Refresh patches.
+
+ -- Julien Puydt <jpuydt@debian.org>  Sat, 29 Oct 2022 08:49:09 +0200
+
+ipykernel (6.16.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Julien Puydt <jpuydt@debian.org>  Mon, 03 Oct 2022 21:43:02 +0200
+
+ipykernel (6.15.3-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Julien Puydt <jpuydt@debian.org>  Mon, 19 Sep 2022 12:46:19 +0200
+
+ipykernel (6.15.2-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Julien Puydt <jpuydt@debian.org>  Wed, 07 Sep 2022 07:54:37 +0200
+
+ipykernel (6.15.1-2) unstable; urgency=medium
+
+  * Team upload
+  * Depend on python3-debugpy (Closes: #1004855)
+  * Autopkgtest now tests all supported Python versions
+
+ -- Julian Gilbey <jdg@debian.org>  Thu, 11 Aug 2022 20:36:38 +0100
+
+ipykernel (6.15.1-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Julien Puydt <jpuydt@debian.org>  Wed, 13 Jul 2022 20:43:51 +0200
+
+ipykernel (6.15.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Julien Puydt <jpuydt@debian.org>  Sat, 25 Jun 2022 08:19:40 +0200
+
+ipykernel (6.13.1-2) unstable; urgency=medium
+
+  * Unbreak the compilation (Closes: #1011964).
+
+ -- Julien Puydt <jpuydt@debian.org>  Tue, 14 Jun 2022 08:13:29 +0200
+
+ipykernel (6.13.1-1) unstable; urgency=medium
+
+  * New upstream version 6.13.1.
+  * Bump standards-version to 4.6.1.
+
+ -- Julien Puydt <jpuydt@debian.org>  Mon, 13 Jun 2022 16:37:29 +0200
+
+ipykernel (6.13.0-1) unstable; urgency=medium
+
+  * New upstream version 6.13.0.
+  * Refresh patches.
+  * Rewrite b-deps (Closes: #1010259).
+  * Add patch to fix an asyncio issue.
+  * Add strange patch to disable a failing test.
+  * Fix autopkgtest deps.
+
+ -- Julien Puydt <jpuydt@debian.org>  Thu, 12 May 2022 12:07:09 +0200
+
+ipykernel (6.9.2-1) unstable; urgency=medium
+
+  * New upstream version 6.9.2
+  * New build-dependency: python3-psutil
+
+ -- Gordon Ball <gordon@chronitis.net>  Mon, 14 Mar 2022 19:57:19 +0000
+
+ipykernel (6.7.0-1) unstable; urgency=medium
+
+  * New upstream version 6.7.0
+
+ -- Gordon Ball <gordon@chronitis.net>  Tue, 25 Jan 2022 19:13:49 +0000
+
+ipykernel (6.6.1-1) unstable; urgency=medium
+
+  * d/watch: allow leading v in version
+  * New upstream version 6.6.1
+  * Drop test-dependency on python3-nose
+  * Standards-Version: 4.6.0
+
+ -- Gordon Ball <gordon@chronitis.net>  Fri, 07 Jan 2022 15:10:32 +0000
+
 ipykernel (6.2.0-1) unstable; urgency=medium
 
   [ Debian Janitor ]
