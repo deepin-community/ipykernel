@@ -1,0 +1,16 @@
+From: hroncok
+Subject: Avoid a DeprecationWarning on Python 3.13+ (#1248)
+Origin: upstream, https://github.com/ipython/ipykernel/commit/b47db6f082ea61e9688b4eca4e92529c1e0e6c45
+Bug-Debian: http://bugs.debian.org/1088771
+
+--- a/ipykernel/jsonutil.py
++++ b/ipykernel/jsonutil.py
+@@ -26,7 +26,7 @@
+ 
+ # holy crap, strptime is not threadsafe.
+ # Calling it once at import seems to help.
+-datetime.strptime("1", "%d")
++datetime.strptime("2000-01-01", "%Y-%m-%d")
+ 
+ # -----------------------------------------------------------------------------
+ # Classes and functions

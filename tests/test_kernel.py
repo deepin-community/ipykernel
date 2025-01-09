@@ -42,7 +42,7 @@ def _check_master(kc, expected=True, stream="stdout"):
 def _check_status(content):
     """If status=error, show the traceback"""
     if content["status"] == "error":
-        assert False, "".join(["\n"] + content["traceback"])
+        raise AssertionError("".join(["\n"] + content["traceback"]))
 
 
 # printing tests
@@ -56,6 +56,106 @@ def test_simple_print():
         assert stdout == "hi\n"
         assert stderr == ""
         _check_master(kc, expected=True)
+
+
+def test_print_to_correct_cell_from_thread():
+    """should print to the cell that spawned the thread, not a subsequently run cell"""
+    iterations = 5
+    interval = 0.25
+    code = f"""\
+    from threading import Thread
+    from time import sleep
+
+    def thread_target():
+        for i in range({iterations}):
+            print(i, end='', flush=True)
+            sleep({interval})
+
+    Thread(target=thread_target).start()
+    """
+    with kernel() as kc:
+        thread_msg_id = kc.execute(code)
+        _ = kc.execute("pass")
+
+        received = 0
+        while received < iterations:
+            msg = kc.get_iopub_msg(timeout=interval * 2)
+            if msg["msg_type"] != "stream":
+                continue
+            content = msg["content"]
+            assert content["name"] == "stdout"
+            assert content["text"] == str(received)
+            # this is crucial as the parent header decides to which cell the output goes
+            assert msg["parent_header"]["msg_id"] == thread_msg_id
+            received += 1
+
+
+def test_print_to_correct_cell_from_child_thread():
+    """should print to the cell that spawned the thread, not a subsequently run cell"""
+    iterations = 5
+    interval = 0.25
+    code = f"""\
+    from threading import Thread
+    from time import sleep
+
+    def child_target():
+        for i in range({iterations}):
+            print(i, end='', flush=True)
+            sleep({interval})
+
+    def parent_target():
+        sleep({interval})
+        Thread(target=child_target).start()
+
+    Thread(target=parent_target).start()
+    """
+    with kernel() as kc:
+        thread_msg_id = kc.execute(code)
+        _ = kc.execute("pass")
+
+        received = 0
+        while received < iterations:
+            msg = kc.get_iopub_msg(timeout=interval * 2)
+            if msg["msg_type"] != "stream":
+                continue
+            content = msg["content"]
+            assert content["name"] == "stdout"
+            assert content["text"] == str(received)
+            # this is crucial as the parent header decides to which cell the output goes
+            assert msg["parent_header"]["msg_id"] == thread_msg_id
+            received += 1
+
+
+def test_print_to_correct_cell_from_asyncio():
+    """should print to the cell that scheduled the task, not a subsequently run cell"""
+    iterations = 5
+    interval = 0.25
+    code = f"""\
+    import asyncio
+
+    async def async_task():
+        for i in range({iterations}):
+            print(i, end='', flush=True)
+            await asyncio.sleep({interval})
+
+    loop = asyncio.get_event_loop()
+    loop.create_task(async_task());
+    """
+    with kernel() as kc:
+        thread_msg_id = kc.execute(code)
+        _ = kc.execute("pass")
+
+        received = 0
+        while received < iterations:
+            msg = kc.get_iopub_msg(timeout=interval * 2)
+            if msg["msg_type"] != "stream":
+                continue
+            content = msg["content"]
+            assert content["name"] == "stdout"
+            assert content["text"] == str(received)
+            # this is crucial as the parent header decides to which cell the output goes
+            assert msg["parent_header"]["msg_id"] == thread_msg_id
+            received += 1
 
 
 @pytest.mark.skip(reason="Currently don't capture during test as pytest does its own capturing")
@@ -196,12 +296,10 @@ def test_subprocess_error():
 def test_raw_input():
     """test input"""
     with kernel() as kc:
-        iopub = kc.iopub_channel
-
         input_f = "input"
         theprompt = "prompt> "
         code = f'print({input_f}("{theprompt}"))'
-        msg_id = kc.execute(code, allow_stdin=True)
+        kc.execute(code, allow_stdin=True)
         msg = kc.get_stdin_msg(timeout=TIMEOUT)
         assert msg["header"]["msg_type"] == "input_request"
         content = msg["content"]
@@ -232,7 +330,7 @@ def test_save_history():
 
 
 def test_smoke_faulthandler():
-    faulthadler = pytest.importorskip("faulthandler", reason="this test needs faulthandler")
+    pytest.importorskip("faulthandler", reason="this test needs faulthandler")
     with kernel() as kc:
         # Note: faulthandler.register is not available on windows.
         code = "\n".join(
@@ -252,7 +350,7 @@ def test_smoke_faulthandler():
 def test_help_output():
     """ipython kernel --help-all works"""
     cmd = [sys.executable, "-m", "IPython", "kernel", "--help-all"]
-    proc = subprocess.run(cmd, timeout=30, capture_output=True)
+    proc = subprocess.run(cmd, timeout=30, capture_output=True, check=True)
     assert proc.returncode == 0, proc.stderr
     assert b"Traceback" not in proc.stderr
     assert b"Options" in proc.stdout

@@ -10,7 +10,7 @@ from queue import Empty
 import pytest
 from jupyter_client._version import version_info
 from jupyter_client.blocking.client import BlockingKernelClient
-from packaging.version import Version as V  # noqa
+from packaging.version import Version as V
 from traitlets import Bool, Dict, Enum, HasTraits, Integer, List, TraitError, Unicode, observe
 
 from .utils import TIMEOUT, execute, flush_channels, get_reply, start_global_kernel
@@ -53,7 +53,7 @@ class Reference(HasTraits):
             try:
                 setattr(self, key, d[key])
             except TraitError as e:
-                assert False, str(e)
+                raise AssertionError(str(e)) from None
 
 
 class Version(Unicode):
@@ -65,9 +65,11 @@ class Version(Unicode):
 
     def validate(self, obj, value):
         if self.min and V(value) < V(self.min):
-            raise TraitError(f"bad version: {value} < {self.min}")
+            msg = f"bad version: {value} < {self.min}"
+            raise TraitError(msg)
         if self.max and (V(value) > V(self.max)):
-            raise TraitError(f"bad version: {value} > {self.max}")
+            msg = f"bad version: {value} > {self.max}"
+            raise TraitError(msg)
 
 
 class RMessage(Reference):
@@ -469,7 +471,7 @@ def test_oinfo_detail():
 def test_oinfo_not_found():
     flush_channels()
 
-    msg_id = KC.inspect("dne")
+    msg_id = KC.inspect("does_not_exist")
     reply = get_reply(KC, msg_id, TIMEOUT)
     validate_message(reply, "inspect_reply", msg_id)
     content = reply["content"]

@@ -5,7 +5,7 @@ export PYBUILD_TEST_ARGS=-v -k 'not test_init_ipc_socket'
 export JUPYTER_RUNTIME_DIR=$(CURDIR)/run
 
 %:
-	dh $@ --with python3 --buildsystem=pybuild
+	dh $@ --buildsystem=pybuild
 
 execute_after_dh_install:
 	python3 -m ipykernel install --prefix=$(CURDIR)/debian/python3-ipykernel/usr
