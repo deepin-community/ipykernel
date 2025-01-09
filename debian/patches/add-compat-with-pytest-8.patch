@@ -1,0 +1,108 @@
+From: Steven Silvester <steven.silvester@ieee.org>
+Date: Mon, 8 Apr 2024 07:32:26 -0500
+Subject: Add compat with pytest 8 (#1231)
+
+Origin: backport, https://github.com/ipython/ipykernel/commit/a7d66ae2197e0d7471ba160542cf5ff7713084b5
+Bug: https://github.com/ipython/ipykernel/issues/1230
+Bug-Debian: https://bugs.debian.org/1070112
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/ipykernel/+bug/2068672
+Last-Update: 2024-06-20
+---
+ tests/__init__.py          | 9 +++++----
+ tests/test_async.py        | 7 +++----
+ tests/test_eventloop.py    | 7 +++----
+ tests/test_message_spec.py | 3 ++-
+ 4 files changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/tests/__init__.py b/tests/__init__.py
+index 013114b..ee324a6 100644
+--- a/tests/__init__.py
++++ b/tests/__init__.py
+@@ -7,6 +7,8 @@ import sys
+ import tempfile
+ from unittest.mock import patch
+ 
++import pytest
++
+ from ipykernel.kernelspec import install
+ 
+ pjoin = os.path.join
+@@ -15,7 +17,8 @@ tmp = None
+ patchers: list = []
+ 
+ 
+-def setup():
++@pytest.fixture(autouse=True)
++def _global_setup():
+     """setup temporary env for tests"""
+     global tmp
+     tmp = tempfile.mkdtemp()
+@@ -34,9 +37,7 @@ def setup():
+ 
+     # install IPython in the temp home:
+     install(user=True)
+-
+-
+-def teardown():
++    yield
+     for p in patchers:
+         p.stop()
+ 
+diff --git a/tests/test_async.py b/tests/test_async.py
+index c58a24d..9b53640 100644
+--- a/tests/test_async.py
++++ b/tests/test_async.py
+@@ -8,14 +8,13 @@ from .utils import TIMEOUT, execute, flush_channels, start_new_kernel
+ KC = KM = None
+ 
+ 
+-def setup_function():
++@pytest.fixture(autouse=True)
++def _setup_env():
+     """start the global kernel (if it isn't running) and return its client"""
+     global KM, KC
+     KM, KC = start_new_kernel()
+     flush_channels(KC)
+-
+-
+-def teardown_function():
++    yield
+     assert KC is not None
+     assert KM is not None
+     KC.stop_channels()
+diff --git a/tests/test_eventloop.py b/tests/test_eventloop.py
+index ee9a68f..69acc0e 100644
+--- a/tests/test_eventloop.py
++++ b/tests/test_eventloop.py
+@@ -42,14 +42,13 @@ def _get_qt_vers():
+ _get_qt_vers()
+ 
+ 
+-def setup():
++@pytest.fixture(autouse=True)
++def _setup_env():
+     """start the global kernel (if it isn't running) and return its client"""
+     global KM, KC
+     KM, KC = start_new_kernel()
+     flush_channels(KC)
+-
+-
+-def teardown():
++    yield
+     assert KM is not None
+     assert KC is not None
+     KC.stop_channels()
+diff --git a/tests/test_message_spec.py b/tests/test_message_spec.py
+index db6ea7d..7dd8ad1 100644
+--- a/tests/test_message_spec.py
++++ b/tests/test_message_spec.py
+@@ -21,7 +21,8 @@ from .utils import TIMEOUT, execute, flush_channels, get_reply, start_global_ker
+ KC: BlockingKernelClient = None  # type:ignore
+ 
+ 
+-def setup():
++@pytest.fixture(autouse=True)
++def _setup_env():
+     global KC
+     KC = start_global_kernel()
+ 

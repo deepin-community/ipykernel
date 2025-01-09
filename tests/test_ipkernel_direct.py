@@ -20,7 +20,7 @@ class user_mod:
     __dict__ = {}
 
 
-async def test_properities(ipkernel: IPythonKernel) -> None:
+async def test_properties(ipkernel: IPythonKernel) -> None:
     ipkernel.user_module = user_mod()
     ipkernel.user_ns = {}
 
@@ -96,7 +96,8 @@ async def test_direct_interrupt_request(ipkernel):
 
     # test failure on interrupt request
     def raiseOSError():
-        raise OSError("evalue")
+        msg = "evalue"
+        raise OSError(msg)
 
     ipkernel._send_interrupt_children = raiseOSError
     reply = await ipkernel.test_control_message("interrupt_request", {})
@@ -212,5 +213,5 @@ def test_finish_metadata(ipkernel: IPythonKernel) -> None:
 
 async def test_do_debug_request(ipkernel: IPythonKernel) -> None:
     msg = ipkernel.session.msg("debug_request", {})
-    msg_list = ipkernel.session.serialize(msg)
+    ipkernel.session.serialize(msg)
     await ipkernel.do_debug_request(msg)

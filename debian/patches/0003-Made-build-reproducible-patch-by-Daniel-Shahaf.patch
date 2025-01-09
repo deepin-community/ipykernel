@@ -6,14 +6,16 @@ Subject: Made build reproducible -- patch by Daniel Shahaf
  ipykernel/kernelspec.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- ipykernel.orig/ipykernel/kernelspec.py
-+++ ipykernel/ipykernel/kernelspec.py
-@@ -87,7 +87,7 @@
+diff --git a/ipykernel/kernelspec.py b/ipykernel/kernelspec.py
+index c0cc9ff..2cce2cb 100644
+--- a/ipykernel/kernelspec.py
++++ b/ipykernel/kernelspec.py
+@@ -100,7 +100,7 @@ def write_kernel_spec(
      if overrides:
          kernel_dict.update(overrides)
      with open(pjoin(path, "kernel.json"), "w") as f:
 -        json.dump(kernel_dict, f, indent=1)
 +        json.dump(kernel_dict, f, indent=1, sort_keys=True)
  
-     return path
+     return str(path)
  

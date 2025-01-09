@@ -1,3 +1,50 @@
+ipykernel (6.29.5-2) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Julian Gilbey ]
+  * Fix DeprecationWarning (closes: #1088771)
+  * Clean more build artefacts (closes: #1047471)
+
+  [ Colin Watson ]
+  * Accept Mapping in Kernel.user_ns instead of dict (closes: #1088315).
+
+ -- Colin Watson <cjwatson@debian.org>  Mon, 16 Dec 2024 01:05:02 +0000
+
+ipykernel (6.29.5-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+
+ -- Colin Watson <cjwatson@debian.org>  Mon, 08 Jul 2024 11:08:17 +0100
+
+ipykernel (6.29.4-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Add compat with pytest 8 (closes: #1070112).
+
+ -- Colin Watson <cjwatson@debian.org>  Thu, 20 Jun 2024 09:54:33 +0100
+
+ipykernel (6.29.3-1) unstable; urgency=medium
+
+  [ Alexandre Detiste ]
+  * Team Upload
+  * New upstream version (Closes: #1056413, #1058305)
+  * refresh patches
+  * remove ref. to "mock", package uses "unittest.mock"
+
+  [ Emmanuel Arias ]
+  * Reorder sequence of d/control fields by cme (routine-update)
+  * Build-Depends: s/dh-python/dh-sequence-python3/ (routine-update)
+  * Remove patch fix_asyncio.patch that is missing from
+    debian/patches/series.
+  * d/salsa-ci.yml: Enable salsa-ci.
+  * d/tests/pytest: Update autopgktest to make it work.
+  * d/tests/control: Add Restrictions: allow-stderr.
+
+ -- Alexandre Detiste <tchet@debian.org>  Thu, 11 Jan 2024 23:25:38 +0100
+
 ipykernel (6.24.0-3) unstable; urgency=medium
 
   * Team upload.

@@ -1,11 +1,13 @@
 #!/bin/sh
 
-set -e
+set -e -u -x
 
 PYS=$(py3versions -s)
-export HOME=$AUTOPKGTEST_TMP
+
+cp -r tests "$AUTOPKGTEST_TMP"
+cd "$AUTOPKGTEST_TMP"
 
 for py in $PYS; do
     echo "Testing with $py:"
-    timeout 300 $py -m pytest ipykernel
+    timeout 300 $py -m pytest -v -k 'not test_init_ipc_socket'
 done

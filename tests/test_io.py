@@ -17,14 +17,14 @@ from jupyter_client.session import Session
 from ipykernel.iostream import MASTER, BackgroundSocket, IOPubThread, OutStream
 
 
-@pytest.fixture
+@pytest.fixture()
 def ctx():
     ctx = zmq.Context()
     yield ctx
     ctx.destroy()
 
 
-@pytest.fixture
+@pytest.fixture()
 def iopub_thread(ctx):
     with ctx.socket(zmq.PUB) as pub:
         thread = IOPubThread(pub)
@@ -117,7 +117,7 @@ def test_outstream(iopub_thread):
 
 
 async def test_event_pipe_gc(iopub_thread):
-    session = Session(key=b'abc')
+    session = Session(key=b"abc")
     stream = OutStream(
         session,
         iopub_thread,
@@ -125,7 +125,6 @@ async def test_event_pipe_gc(iopub_thread):
         isatty=True,
         watchfd=False,
     )
-    save_stdout = sys.stdout
     assert iopub_thread._event_pipes == {}
     with stream, mock.patch.object(sys, "stdout", stream), ThreadPoolExecutor(1) as pool:
         pool.submit(print, "x").result()
@@ -151,7 +150,7 @@ async def test_event_pipe_gc(iopub_thread):
 
 def subprocess_test_echo_watch():
     # handshake Pub subscription
-    session = Session(key=b'abc')
+    session = Session(key=b"abc")
 
     # use PUSH socket to avoid subscription issues
     with zmq.Context() as ctx, ctx.socket(zmq.PUSH) as pub:
@@ -200,8 +199,7 @@ def test_echo_watch(ctx):
     s = ctx.socket(zmq.PULL)
     port = s.bind_to_random_port("tcp://127.0.0.1")
     url = f"tcp://127.0.0.1:{port}"
-    session = Session(key=b'abc')
-    messages = []
+    session = Session(key=b"abc")
     stdout_chunks = []
     with s:
         env = dict(os.environ)
@@ -216,6 +214,7 @@ def test_echo_watch(ctx):
             ],
             env=env,
             capture_output=True,
+            check=True,
             text=True,
             timeout=10,
         )
